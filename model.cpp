@@ -7,7 +7,7 @@ using namespace std;
 
 Model::Model() {
     contourBox = new ContourBox;
-    rStyle =  SMOOTH;
+    rStyle = SMOOTH;
     meshOn = capsOn = false;
 }
 
@@ -30,10 +30,6 @@ void Model::addContour(){
     numContours++;
 }
 
-// void Model::deleteContour(){
-//     cout<<"Enter the contour level to be deleted : "  ; 
-// }
-
 void Model::loadContour(char *filename) {
     int x, y, numVertices;
     delete contourBox;
@@ -45,15 +41,24 @@ void Model::loadContour(char *filename) {
     rep(i, 0, numContours) {
         in >> numVertices;
         Contour newContour(contourBox);
-        for (int j = 0; j < numVertices; j++) {
+        rep(j, 0, numVertices) {
             in >> x >> y;
             newContour.addControlPt(Point(x, y));
         }
 
         ContourPlane newPlane;
+        newPlane.addContour(newContour);
         contourBox->addPlane(newPlane);
+        contourBox->finishContourLoad(i, 0);
     }
-    contourBox->finishContourLoad(numContours, numContours);
+    rep(i, 1, numContours) {
+        Point upper, lower;
+        upper.x = i;
+        lower.x = i - 1;
+        upper.y = 0;
+        lower.y = 0;
+        contourBox->newStrip(upper, lower);
+    }
 }
 
 void Model::listContours(){
@@ -74,6 +79,8 @@ void Model::listContours(){
 
 void Model::draw3D(){
     this->contourBox->draw3D(sepPlane, rStyle, meshOn, capsOn);
+    glFinish();
+    glFlush();
 }
 
 void Model::refresh(){

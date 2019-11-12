@@ -181,12 +181,13 @@ void Contour::optimizeVertices() {
     float xVal,yVal,angle;
     float angle2;
     bool startC=false;
-    
+
     //sum of angle differences
     float totalDiff=0;
-    
-    if(controlPts.size() < 3) 
-        return;
+
+    int sz = controlPts.size();
+
+    if (sz < 3)   return;
 
     xVal = controlPts[x].x - controlPts[x+1].x;
     yVal = controlPts[x].y - controlPts[x+1].y;
@@ -194,7 +195,7 @@ void Contour::optimizeVertices() {
     x++;
 
     //Combine pts if their angle is within a given threshold
-    while((x+1)<controlPts.size() ) {
+    while((x+1) < sz) {
         xVal = controlPts[x].x - controlPts[x+1].x;
         yVal = controlPts[x].y - controlPts[x+1].y;
         angle2 = atan2(yVal,xVal);
@@ -281,16 +282,16 @@ void ContourBox::modifyPoint(int currLevel, Point target,int currPickC,int currP
 
 void ContourBox::finishContourLoad(int planeNum, int contourNum) {
     contourSet[planeNum].finishContour(contourNum, true);
-    if (planeNum > 0 && contourSet[planeNum - 1].planeContours.size() > 0) {
-        contourSet[planeNum].optimizeTiling(planeNum, contourNum);
-    }
-    if (planeNum < contourSet.size() - 1) {
-        if (contourSet[planeNum].planeContours[contourNum].nextCont.size() > 0) {
-            for (int i = 0; i < contourSet[planeNum].planeContours[contourNum].nextCont.size(); ++i) {
-                contourSet[planeNum+1].optimizeTiling(planeNum+1, contourSet[planeNum].planeContours[contourNum].nextCont[i].y);
-            }
-        }
-    }
+    // if (planeNum > 0 && contourSet[planeNum - 1].planeContours.size() > 0) {
+    //     contourSet[planeNum].optimizeTiling(planeNum, contourNum);
+    // }
+    // if (planeNum < contourSet.size() - 1) {
+    //     if (contourSet[planeNum].planeContours[contourNum].nextCont.size() > 0) {
+    //         for (int i = 0; i < contourSet[planeNum].planeContours[contourNum].nextCont.size(); ++i) {
+    //             contourSet[planeNum+1].optimizeTiling(planeNum+1, contourSet[planeNum].planeContours[contourNum].nextCont[i].y);
+    //         }
+    //     }
+    // }
 }
 
 void ContourBox::draw3D(float sepStep,RenderStyle rStyle,bool meshOn,bool capOn) {
