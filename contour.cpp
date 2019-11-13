@@ -77,9 +77,8 @@ void Contour::insertPts(vector<Point> &tmpPts) {
 }
 
 void Contour::draw3D(float sepStep,int level, RenderStyle rStyle, bool meshOn, bool capOn, int cNum) {
-    GLUquadricObj *qua;
     Contour *next, *prev;
-
+    cout << "lvl: " << level << ", sz: " << controlPts.size() << endl;
     float sep = level * sepStep;
     if (!(capOn && meshOn && rStyle == SMOOTH))
         glDisable(GL_LIGHTING);
@@ -91,7 +90,8 @@ void Contour::draw3D(float sepStep,int level, RenderStyle rStyle, bool meshOn, b
     // draw contour
     int i;
     for (i = 0; i < controlPts.size() - 1; ++i) {
-        if(!(capOn&&meshOn&&rStyle==SMOOTH)) {
+        cout << controlPts[i].x/90.0-2 << ", " << .1+sep/2.0 << ", " << -controlPts[i].y/90.0+7 << endl;
+        if (!(capOn && meshOn && rStyle==SMOOTH)) {
             glColor3ub(255,255,255);
             glPointSize(4);
             glBegin(GL_POINTS);
@@ -99,24 +99,26 @@ void Contour::draw3D(float sepStep,int level, RenderStyle rStyle, bool meshOn, b
             glEnd();
         }
 
-        if(!(capOn&&meshOn && rStyle==SMOOTH))
+        if(!(capOn && meshOn && rStyle==SMOOTH))
             glBegin(GL_LINES);
         glColor3ub(color.r, color.g, color.b);
         glVertex3d(controlPts[i].x/90.0-2, .1+sep/2.0, -controlPts[i].y/90.0+7);
         
-        if(!(capOn&&meshOn&&rStyle==SMOOTH))  {
+        if(!(capOn && meshOn && rStyle==SMOOTH))  {
             glVertex3d(controlPts[i+1].x/90.0-2,.1+sep/2.0, -controlPts[i+1].y/90.0+7);
             glEnd();
         }
     }
 
-    if(!(capOn&&meshOn&&rStyle==SMOOTH) ) {
+    cout << controlPts[i].x/90.0-2 << ", " << .1+sep/2.0 << ", " << -controlPts[i].y/90.0+7 << endl;
+    if(!(capOn && meshOn && rStyle==SMOOTH) ) {
         glBegin(GL_LINES);
         glColor3ub(color.r, color.g, color.b);
         glVertex3d(controlPts[i].x/90.0-2, .1+sep/2.0, -controlPts[i].y/90.0+7);
-        glVertex3d(controlPts[i].x/90.0-2, .1+sep/2.0, -controlPts[i].y/90.0+7);
+        glVertex3d(controlPts[0].x/90.0-2, .1+sep/2.0, -controlPts[0].y/90.0+7);
         glEnd();
     } else {
+        glBegin(GL_POINTS);
         glVertex3d(controlPts[i].x/90.0-2, .1+sep/2.0, -controlPts[i].y/90.0+7);
         glEnd();
         glDisable(GL_LIGHTING);
@@ -126,7 +128,7 @@ void Contour::draw3D(float sepStep,int level, RenderStyle rStyle, bool meshOn, b
         glPointSize(4);
         glBegin(GL_POINTS);
         glColor3ub(255,255,255);
-        glVertex3d(controlPts[i].x/90.0-2, .1+sep/2.0, -controlPts[i].y/90.0+7 );
+        glVertex3d(controlPts[i].x/90.0-2, .1+sep/2.0, -controlPts[i].y/90.0+7);
         glEnd();
     }
 
@@ -162,7 +164,6 @@ void Contour::draw3D(float sepStep,int level, RenderStyle rStyle, bool meshOn, b
                 break;
             case FLAT:
                 glEnable(GL_LIGHTING);
-                //glBegin(GL_TRIANGLE_STRIP);
                 glShadeModel(GL_FLAT);
                 glColor3ub(color.r, color.g, color.b);
                 break;

@@ -78,9 +78,44 @@ void Model::listContours(){
 }
 
 void Model::draw3D(){
+    glDisable(GL_ALPHA_TEST);
+    glDisable(GL_BLEND);
+    glDisable(GL_FOG);
+
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
+    glClearDepth(1.0);
+   
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
+    glShadeModel( GL_SMOOTH );
+    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );	
+    glEnable(GL_COLOR_MATERIAL);
+
+    glMatrixMode( GL_PROJECTION );
+    // glLoadMatrixd((const GLdouble *) projection_mat.Ref());
+
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+
+
     this->contourBox->draw3D(sepPlane, rStyle, meshOn, capsOn);
-    glFinish();
-    glFlush();
+
+
+    glDisable(GL_COLOR_MATERIAL);
+
+    /* house shape */
+    glColor3f(1.0, 0.0, 0.0);
+    glBegin(GL_POLYGON);
+        glVertex2i(0, 0);
+        glVertex2i(10, 0);
+        glVertex2i(10, 10);
+        glVertex2i(0, 10);
+    glEnd();
+    cout << "Swapping buffers..." << endl;
+    glutSwapBuffers();
 }
 
 void Model::refresh(){
